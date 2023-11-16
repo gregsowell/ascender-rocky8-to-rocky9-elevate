@@ -39,6 +39,7 @@
       ansible.builtin.yum:
         name: http://repo.almalinux.org/elevate/elevate-release-latest-el8.noarch.rpm
         state: latest
+        disable_gpg_check: true
 
     - name: Install leap packages for general and rocky
       ansible.builtin.yum:
