@@ -35,7 +35,7 @@
     # ansible.builtin.shell: yum install -y http://repo.almalinux.org/elevate/elevate-release-latest-el$(rpm --eval %rhel).noarch.rpm
     - name: Install elevate
       ansible.builtin.yum:
-        name: http://repo.almalinux.org/elevate/elevate-release-latest-el7.noarch.rpm
+        name: http://repo.almalinux.org/elevate/elevate-release-latest-el8.noarch.rpm
         state: latest
 
     - name: Install leap packages for general and rocky
@@ -58,12 +58,11 @@
       ansible.builtin.shell: cat /var/log/leapp/leapp-report.txt | grep -F [command] | awk '{$1= ""; print $0}'
       register: fix_commands
 
-    # - name: Run standard preupgrade fixes
-    #   ansible.builtin.shell: "{{ item }}"
-    #   loop:
-    #     - rmmod pata_acpi
-    #     - echo PermitRootLogin yes | tee -a /etc/ssh/sshd_config
-    #     # - leapp answer --section remove_pam_pkcs11_module_check.confirm=True
+    - name: Run standard preupgrade fixes
+      ansible.builtin.shell: "{{ item }}"
+      loop:
+        - sed -i "s/^AllowZoneDrifting=.*/AllowZoneDrifting=no/" /etc/firewalld/firewalld.conf
+        - leapp answer --section check_vdo.no_vdo_devices=True
 
     - name: Run gathered preupgrade fixes
       ansible.builtin.shell: "{{ item }}"
