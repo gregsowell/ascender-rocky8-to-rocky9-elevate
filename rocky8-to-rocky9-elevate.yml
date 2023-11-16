@@ -13,16 +13,16 @@
         fail_msg: '[ERROR] All hosts not allowed.'
       run_once: true
 
-    - name: Update current centos7 packages
+    - name: Update current rocky8 packages
       ansible.builtin.yum:
         name: '*'
         state: latest
-      register: cent_update
+      register: rocky_update
 
     - name: Reboot if updates were made
       ansible.builtin.reboot:
         reboot_timeout: 3600
-      when: cent_update.changed
+      when: rocky_update.changed
 
     - name: Grab current os version
       ansible.builtin.shell: cat /etc/os-release | grep PRETTY_NAME
@@ -58,12 +58,12 @@
       ansible.builtin.shell: cat /var/log/leapp/leapp-report.txt | grep -F [command] | awk '{$1= ""; print $0}'
       register: fix_commands
 
-    - name: Run standard preupgrade fixes
-      ansible.builtin.shell: "{{ item }}"
-      loop:
-        - rmmod pata_acpi
-        - echo PermitRootLogin yes | tee -a /etc/ssh/sshd_config
-        # - leapp answer --section remove_pam_pkcs11_module_check.confirm=True
+    # - name: Run standard preupgrade fixes
+    #   ansible.builtin.shell: "{{ item }}"
+    #   loop:
+    #     - rmmod pata_acpi
+    #     - echo PermitRootLogin yes | tee -a /etc/ssh/sshd_config
+    #     # - leapp answer --section remove_pam_pkcs11_module_check.confirm=True
 
     - name: Run gathered preupgrade fixes
       ansible.builtin.shell: "{{ item }}"
@@ -76,9 +76,9 @@
       ansible.builtin.reboot:
         reboot_timeout: 1200
 
-    - name: set new python interpreter
-      ansible.builtin.set_fact:
-        ansible_python_interpreter: /usr/bin/python3
+    # - name: set new python interpreter
+    #   ansible.builtin.set_fact:
+    #     ansible_python_interpreter: /usr/bin/python3
 
     - name: Grab current os version
       ansible.builtin.shell: cat /etc/os-release | grep PRETTY_NAME
