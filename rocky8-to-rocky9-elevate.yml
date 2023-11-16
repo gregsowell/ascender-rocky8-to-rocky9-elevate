@@ -4,7 +4,8 @@
   gather_facts: false
   become: true
   vars:
-
+    #to do all of the extra before and after stuff
+    extra_stuff: false
   tasks:
 
     - name: quick check if all hosts was specified with no limit
@@ -30,6 +31,7 @@
 
     # Everything you need to do before starting the upgrade
     - name: Manage custom tasks if existing
+      when: extra_stuff
       include_tasks: before_upgrade.yml
 
     # ansible.builtin.shell: yum install -y http://repo.almalinux.org/elevate/elevate-release-latest-el$(rpm --eval %rhel).noarch.rpm
@@ -47,6 +49,7 @@
 
     # Everything you need to do before starting the upgrade
     - name: Manage custom tasks if existing
+      when: extra_stuff
       include_tasks: after_leapp_install.yml
 
     - name: run the leapp preupgrade
@@ -89,4 +92,5 @@
 
     # Everything you need to do before starting the upgrade
     - name: Manage custom tasks if existing
+      when: extra_stuff
       include_tasks: after_upgrade.yml
