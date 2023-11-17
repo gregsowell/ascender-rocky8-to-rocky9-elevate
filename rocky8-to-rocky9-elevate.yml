@@ -81,10 +81,6 @@
       ansible.builtin.reboot:
         reboot_timeout: 1200
 
-    # - name: set new python interpreter
-    #   ansible.builtin.set_fact:
-    #     ansible_python_interpreter: /usr/bin/python3
-
     - name: Grab current os version
       ansible.builtin.shell: cat /etc/os-release | grep PRETTY_NAME
       register: ver_post
@@ -93,7 +89,7 @@
       ansible.builtin.debug:
         msg: "Version before {{ ver_pre.stdout | regex_replace('PRETTY_NAME=','')}}.  Version after {{ ver_post.stdout | regex_replace('PRETTY_NAME=','')}}."
 
-    # Everything you need to do before starting the upgrade
+    # Everything you need to do after the upgrade
     - name: Manage custom tasks if existing
       when: extra_stuff
       include_tasks: after_upgrade.yml
