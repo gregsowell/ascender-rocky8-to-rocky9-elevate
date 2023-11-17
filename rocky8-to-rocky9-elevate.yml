@@ -67,6 +67,8 @@
       loop:
         - sed -i "s/^AllowZoneDrifting=.*/AllowZoneDrifting=no/" /etc/firewalld/firewalld.conf
         - leapp answer --section check_vdo.no_vdo_devices=True
+        # fix rocky-logos conflict
+        - rpm -qa | grep rocky-logos | xargs dnf remove -y
 
     - name: Run gathered preupgrade fixes
       ansible.builtin.shell: "{{ item }}"
